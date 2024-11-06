@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Data.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,27 +47,42 @@ builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddServices();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    // Seed the database
-    using (var scope = app.Services.CreateScope())
+    var services = scope.ServiceProvider;
+
+    // Try To Apply Migrations
+    try
     {
-        var seeder = scope.ServiceProvider.GetRequiredService<IUserSeeder>();
-        await seeder.Seed();
+        var dbContext = services.GetRequiredService<UsersDbContext>();
+        dbContext.Database.Migrate();
     }
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    catch (Exception e)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(e, e.Message);
+    }
+    
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+            // Use the Seed to add a Guest User For Development
+            var seeder = services.GetRequiredService<IUserSeeder>();
+            await seeder.Seed();
+
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 }
 
+
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 
 // Add Authentication middleware
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
+app.UseHttpsRedirection();
 
 app.Run();

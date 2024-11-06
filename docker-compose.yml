@@ -1,0 +1,35 @@
+services:
+  willinn-unknown-api-prod:
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    container_name: willinn-unknown-api-prod
+    environment:
+      - ASPNETCORE_URLS=http://+:8081
+      - ConnectionStrings__WillinnBackendApiDb=Server=sql-database-dev;Database=UserDb;User=sa;Password=W1llinn-passwd-Strong;TrustServerCertificate=true;
+    ports:
+      - "8081:8081"
+    depends_on:
+      - sql-database-prod
+    networks:
+      - willinn_network
+
+  sql-database-prod:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-database-prod
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=W1llinn-passwd-Strong
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/sql-database-prod
+    networks:
+      - willinn_network
+
+volumes:
+  sql_data:
+
+networks:
+  willinn_network:
+    driver: bridge

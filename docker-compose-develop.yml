@@ -1,10 +1,36 @@
 services:
-  willinn-unknown-api:
+  willinn-unknown-api-dev:
     build:
       context: .
       dockerfile: Api/Dockerfile-test
-    container_name: willinn-unknown-api
+    container_name: willinn-unknown-api-dev
     environment:
-      "ASPNETCORE_URLS": "http://+:5001"
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - ConnectionStrings__WillinnBackendApiDb=Server=sql-database-dev;Database=UserDb;User=sa;Password=W1llinn-passwd-Strong;TrustServerCertificate=true;
     ports:
       - "5001:5001"
+    depends_on:
+      - sql-database-dev
+    networks:
+      - willinn_network
+
+  sql-database-dev:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-database-dev
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=W1llinn-passwd-Strong
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/sql-database-dev
+    networks:
+      - willinn_network
+
+volumes:
+  sql_data:
+
+networks:
+  willinn_network:
+    driver: bridge
