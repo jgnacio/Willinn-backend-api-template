@@ -1,10 +1,14 @@
 # willinn-backend-template
 
-Este proyecto demuestra una aplicación .NET construida utilizando los principios de **Clean Architecture**.
+RESTful API Willinn Backen API Template desarrollada en .NET 8 para una sencilla gestión de usuarios. Como parte de la
+prueba técnica para Trainee, se desarrollo un CRUD para la gestion de los mismos, ademas de aplicar los principios de
+**Clean Architecture**, gestion de Tokens con JWT, Seeder para data inicial en desarrollo y docker-compose para fácil
+instanciación.
 
 ## Visión General de Clean Architecture
 
-**Clean Architecture** separa la lógica de la aplicación en capas distintas, lo que mejora la mantenibilidad, testabilidad y portabilidad del sistema:
+**Clean Architecture** separa la lógica de la aplicación en capas distintas, lo que mejora la mantenibilidad,
+testabilidad y portabilidad del sistema:
 
 - **Capa de Presentación**: Maneja las interacciones del usuario y la presentación (por ejemplo, controladores API).
 - **Capa de Aplicación**: Contiene la lógica de negocio central y se encarga de interactuar con la capa de dominio.
@@ -19,19 +23,20 @@ El proyecto sigue la estructura de **Clean Architecture**, con cada capa represe
 
 - **Api**: Contiene el código de la capa de presentación, incluyendo los controladores de la API.
 - **Core**: Contiene la lógica de negocio de la aplicación, interfaces y reglas de la capa de aplicación.
-- **Data**: Contiene el código de la capa de persistencia, incluyendo el acceso a datos y configuraciones de Entity Framework Core.
+- **Data**: Contiene el código de la capa de persistencia, incluyendo el acceso a datos y configuraciones de Entity
+- Framework Core.
 - **Services**: Contiene los servicios de la aplicación que median entre las capas de aplicación y persistencia.
 
 ## Ejecución de la Aplicación
 
 ### Requisitos Previos
 
-- **.NET 6 SDK** o posterior ([Descargar .NET](https://dotnet.microsoft.com/en-us/download/dotnet/6.0))
+- **.NET 8 SDK** ([Descargar .NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0))
 - **Docker Desktop** ([Descargar Docker](https://www.docker.com/)) (opcional, si prefieres usar Docker Compose)
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tuusuario/tu-repositorio.git
+   git clone https://github.com/jgnacio/Willinn-backend-api-template.git
     ```
 2. Abre una terminal en el directorio del proyecto.
 
@@ -75,4 +80,12 @@ http://localhost:8081
 ```
 
 - Asegurate de no tener ese puerto ocupado
+
+### Usuario de Prueba
+En el entorno de desarrollo se proporciona un usuario de prueba para hacer peticiones:
+```bash
+User="WillinUserGuest"
+Email="WillinnGuest@gmail.com"
+Passwd="Guest"
+```
 
