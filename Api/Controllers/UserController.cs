@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Core.Models;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
 
@@ -59,6 +60,7 @@ public class UsersController(IUserService userService) : ControllerBase
     /// Status 200 with an Object containing the newly created User object on success, or a BadRequest status code
     /// </returns>
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<User>> PostUser([FromBody] UserRequest userRequest)
     {
         var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(userRequest.Password, 13);
@@ -81,6 +83,7 @@ public class UsersController(IUserService userService) : ControllerBase
     /// (no users found).
     /// </returns>
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         var users = await userService.GetAllUsersAsync();
@@ -88,6 +91,7 @@ public class UsersController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<User>> GetUser(Guid id)
     {
         var user = await userService.GetUserByIdAsync(id);
@@ -114,6 +118,7 @@ public class UsersController(IUserService userService) : ControllerBase
     /// Status 200 With the updated User object on success, or a NotFound status code on failure (user not found)
     /// </returns>
     [HttpPut("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<User>> PutUser(Guid id,[FromBody] UserRequest userRequest)
     {
         var user = await userService.GetUserByIdAsync(id);
@@ -146,6 +151,7 @@ public class UsersController(IUserService userService) : ControllerBase
     /// 200 status code on success (user marked inactive) or a NotFound status code on failure (user not found).
     /// </returns>
     [HttpDelete("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         
